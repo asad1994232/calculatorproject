@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <style>
+
+      
+      #snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #ff000080;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+      }
+
+      #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+
+      @-webkit-keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @-webkit-keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+      #container {
+        display: flex;
+        align-items: center;
+      }
+
+      h1 {
+        margin-right: 20px;
+      }
+    </style>
+    <title>Calculator</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <div class="container">
+      <div class="jumbotron mt-2 text-center">
+        <h1>Calculator</h1>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="">Date of the Event</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="date_of_event"
+                  id="date_of_event"
+                />
+              </div>
+              <div class="form-group">
+                <label for="guest_count">Guest Count</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="guest_count"
+                  id="guest_count"
+                />
+              </div>
+              <div class="form-group">
+                <label for="hours_of_Event">Hours of Event</label>
+                <select
+                  name="hours_of_Event"
+                  id="hours_of_Event"
+                  class="form-control"
+                >
+                  <option value="">Select</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="">Type of Drink</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexRadioDefault1"
+                  />
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    Champagne Toast
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexRadioDefault2"
+                    checked
+                  />
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    Drink in Hand
+                  </label>
+                </div>
+              </div>
+
+              <div class="form_group">
+                <label for="estimated_weather">Estimated Weather</label>
+                <select
+                  name="estimated_weather"
+                  id="estimated_weather"
+                  class="form-control"
+                >
+                  <option value="">Select</option>
+                  <option value="1">Room Temp or Colder < 68 degrees</option>
+                  <option value="2">Warm 68 - 75 degrees</option>
+                  <option value="3">Hot 75+ degrees</option>
+                </select>
+              </div>
+              <div class="form_group mt-3">
+                <label for="type_of_drinkers">Type of Drinkers</label>
+                <select
+                  name="type_of_drinkers"
+                  id="type_of_drinkers"
+                  class="form-control"
+                >
+                  <option value="">Select</option>
+                  <option value=".75">Light Drinker</option>
+                  <option value="1">Average Drinker</option>
+                  <option value="1.5">Heavy Drinker</option>
+                </select>
+              </div>
+
+              <div class="form-group mt-3">
+                <label for="option">Select Variation For Drinks</label>
+                <select
+                  name="option"
+                  id="option"
+                  class="form-control"
+                  onchange="calculate_range();"
+                >
+                  <option value="0">Select</option>
+                  <option value="1">Wine & Beer</option>
+                  <option value="2">Wine, Beer & Cocktails</option>
+                </select>
+              </div>
+              <div class="form-group" id="range1_div" style="display: none">
+                <label for="range1"
+                  >Beer
+                  <span class="badge badge-success" id="range1_span"
+                    >0%</span
+                  ></label
+                >
+                <input
+                  type="range"
+                  name="range1"
+                  id="range1"
+                  class="form-control"
+                  step="0.5"
+                  max="100"
+                  min="0"
+                />
+              </div>
+              <div class="form-group" id="range2_div" style="display: none">
+                <label for="range2"
+                  >Wine
+                  <span class="badge badge-success" id="range2_span"
+                    >0%</span
+                  ></label
+                >
+                <input
+                  type="range"
+                  name="range2"
+                  id="range2"
+                  class="form-control"
+                  step="0.5"
+                  max="100"
+                  min="0"
+                />
+              </div>
+              <div class="form-group" id="range3_div" style="display: none">
+                <label for="range3"
+                  >Cocktails
+                  <span class="badge badge-success" id="range3_span"
+                    >0%</span
+                  ></label
+                >
+                <input
+                  type="range"
+                  name="range3"
+                  id="range3"
+                  class="form-control"
+                  step="0.5"
+                  max="100"
+                  min="0"
+                />
+              </div>
+              <div class="form-group" id="shoppinglist_div"></div>
+              <div class="form-group" id="shoppinglist1_div"></div>
+              <div class="form-group" id="shoppinglist2_div"></div>
+              <div class="form-group" id="calculate_drinks"></div>
+              <div class="form-group" id="calculate_drinks1"></div>
+
+              <div
+                class="d-grid gap-2 d-md-flex justify-content-md-end form-group"
+              >
+                <button class="btn btn-primary mt-3" onclick="calculator()">
+                  Calculate
+                </button>
+              </div>
+
+              <div id="snackbar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function calculate_range() {
+        selected = $("#option").val();
+
+        switch (selected) {
+          case "0":
+            $("#range1_div").hide();
+            $("#range2_div").hide();
+            $("#range3_div").hide();
+            break;
+
+          case "1":
+            $("#range1_div").show();
+            $("#range1_span").text("60%");
+            $("#range1").val("60");
+            $("#range2_div").show();
+            $("#range2_span").text("40%");
+            $("#range2").val("40");
+            $("#range3_div").hide();
+            break;
+
+          case "2":
+            $("#range1_div").show();
+            $("#range1_span").text("20%");
+            $("#range1").val("20");
+            $("#range2_div").show();
+            $("#range2_span").text("30%");
+            $("#range2").val("30");
+            $("#range3_div").show();
+            $("#range3_span").text("50%");
+            $("#range3").val("50");
+            break;
+        }
+      }
+
+      $(document).on("input change", "#range1", function () {
+        selected = $("#option").val();
+        range1 = parseFloat($("#range1").val());
+        range2 = parseFloat($("#range2").val());
+        range3 = parseFloat($("#range3").val());
+
+        if (selected == 1) {
+          $("#range1_span").text(range1 + "%");
+          $("#range2_span").text(100 - range1 + "%");
+          $("#range2").val(100 - range1);
+        } else {
+          result2 = range2 + (100 - range1 - range2 - range3) / 2;
+          result3 = range3 + (100 - range1 - range2 - range3) / 2;
+
+          if (range1 == 100) {
+            result2 = 0;
+            result3 = 0;
+          }
+          $("#range1_span").text(range1 + "%");
+          $("#range2_span").text(result2 + "%");
+          $("#range2").val(result2);
+          $("#range3_span").text(result3 + "%");
+          $("#range3").val(result3);
+        }
+      });
+
+      $(document).on("input change", "#range2", function () {
+        selected = $("#option").val();
+        range1 = parseFloat($("#range1").val());
+        range2 = parseFloat($("#range2").val());
+        range3 = parseFloat($("#range3").val());
+
+        if (selected == 1) {
+        } else {
+          result1 = range1 + (100 - range1 - range2 - range3) / 2;
+          result3 = range3 + (100 - range1 - range2 - range3) / 2;
+
+          if (range2 == 100) {
+            result1 = 0;
+            result3 = 0;
+          }
+          $("#range1_span").text(result1 + "%");
+          $("#range1").val(result1);
+          $("#range2_span").text(range2 + "%");
+          $("#range3_span").text(result3 + "%");
+          $("#range3").val(result3);
+        }
+      });
+
+      $(document).on("input change", "#range3", function () {
+        range1 = parseFloat($("#range1").val());
+        range2 = parseFloat($("#range2").val());
+        range3 = parseFloat($("#range3").val());
+        result1 = range1 + (100 - range1 - range2 - range3) / 2;
+        result2 = range2 + (100 - range1 - range2 - range3) / 2;
+
+        if (range3 == 100) {
+          result1 = 0;
+          result2 = 0;
+        }
+
+        $("#range1_span").text(result1 + "%");
+        $("#range1").val(result1);
+        $("#range2_span").text(result2 + "%");
+        $("#range2").val(result2);
+        $("#range3_span").text(range3 + "%");
+      });
+
+      function calculator() {
+        const date = document.getElementById("date_of_event").value;
+        const guest = document.getElementById("guest_count").value;
+        const hours = document.getElementById("hours_of_Event").value;
+        const drinkers = document.getElementById("type_of_drinkers").value;
+        const radiobtn = document.getElementById("flexRadioDefault1");
+        const temp = document.getElementById("estimated_weather").value;
+        const variation = document.getElementById("option").value;
+
+        document.getElementById("calculate_drinks1").value;
+        if (date == "") {
+          error("Please select date of event");
+          document.getElementById("date_of_event").focus();
+        } else if (guest == "") {
+          error("Please select a valid value for guest count");
+          document.getElementById("guest_count").focus();
+        } else if (guest <= 0) {
+          error("Please select a valid value for guest count");
+          document.getElementById("guest_count").focus();
+        } else if (hours == "") {
+          error("Please select a valid value for hours of event");
+          document.getElementById("hours_of_Event").focus();
+        } else if (temp == "") {
+          error("Please select a valid value for estimated weather");
+          document.getElementById("estimated_weather").focus();
+        } else if (drinkers == "") {
+          error("Please select a valid value for type of drinkers");
+          document.getElementById("type_of_drinkers").focus();
+        } else if (variation == 0) {
+          error("Please select a valid value for variation for drinks");
+          document.getElementById("option").focus();
+        } else {
+          const result = guest * hours * drinkers;
+          if (radiobtn.checked == true) {
+            range1 = parseFloat($("#range1").val());
+            range2 = parseFloat($("#range2").val());
+            range3 = parseFloat($("#range3").val());
+
+            let no_of_drinks = result - guest;
+            let no_of_bottles = Math.round((guest * 1) / 8);
+            document.getElementById("shoppinglist1_div").innerHTML =
+              `<h4>Bubbly   <span style="font-size:20px;">(` +
+              guest +
+              ` Servings / 75cl Bottle)</span></h4><p>` +
+              no_of_bottles +
+              " Bottles</p>";
+
+            selected = document.getElementById("option").value;
+            result1 = (range1 / 100) * no_of_drinks;
+            result2 = (range2 / 100) * no_of_drinks;
+            if (selected == 2) {
+              result3 = (range3 / 100) * no_of_drinks;
+            }
+          } else {
+            range1 = parseFloat($("#range1").val());
+            range2 = parseFloat($("#range2").val());
+            range3 = parseFloat($("#range3").val());
+
+            let no_of_drinks = result;
+
+            selected = document.getElementById("option").value;
+            document.getElementById("shoppinglist1_div").innerHTML = "";
+
+            result1 = (range1 / 100) * no_of_drinks;
+
+            result2 = (range2 / 100) * no_of_drinks;
+
+            if (selected == 2) {
+              result3 = (range3 / 100) * no_of_drinks;
+            }
+          }
+
+          if (temp == 1) {
+            pilsner = Math.ceil((25 / 100) * result1);
+            ipa = Math.ceil((50 / 100) * result1);
+            amber = Math.ceil((25 / 100) * result1);
+
+            red_wine = Math.ceil((50 / 100) * (result2 / 4));
+            white_wine = Math.ceil((30 / 100) * (result2 / 4));
+            rose_wine = Math.ceil((20 / 100) * (result2 / 4));
+          } else if (temp == 2) {
+            pilsner = Math.ceil((40 / 100) * result1);
+            ipa = Math.ceil((40 / 100) * result1);
+            amber = Math.ceil((20 / 100) * result1);
+
+            red_wine = Math.ceil((35 / 100) * (result2 / 4));
+            white_wine = Math.ceil((35 / 100) * (result2 / 4));
+            rose_wine = Math.ceil((30 / 100) * (result2 / 4));
+          } else if (temp == 3) {
+            pilsner = Math.ceil((35 / 100) * result1);
+            ipa = Math.ceil((35 / 100) * result1);
+            amber = Math.ceil((30 / 100) * result1);
+
+            red_wine = Math.ceil((20 / 100) * (result2 / 4));
+            white_wine = Math.ceil((50 / 100) * (result2 / 4));
+            rose_wine = Math.ceil((30 / 100) * (result2 / 4));
+          }
+          let no_of_drinks = result - guest;
+          let no_of_bottles = Math.round((guest * 1) / 8);
+          if (selected == 1) {
+            result3 = (range3 / 100) * no_of_drinks;
+          }
+        }
+        var calculation = pilsner + ipa + amber;
+        var calculate_drinks = red_wine + white_wine + rose_wine;
+        document.getElementById("shoppinglist_div").innerHTML =
+          "<h4>Shopping list</h4>" +
+          "<p>Following is the shopping list suggested :</p>" +
+          `</p><h4>Beer <span style="font-size:20px;">(12oz. Can/ ${calculation} Cans)</span> </h4><p>` +
+          pilsner +
+          ' Bottles of Lager, Pilsner, or other "Light Beer"</p><p>' +
+          ipa +
+          " Bottles of IPA or Pale Ale</p><p>" +
+          amber +
+          `Bottles of Amber, Red, Wheat Beer</p><h4>Wine <span style="font-size:20px;">  (${Math.ceil(
+            result2
+          )} Servings / ${calculate_drinks} Bottles)</span></h4><p>` +
+          +red_wine +
+          " Bottles of Red Wine</p><p>" +
+          white_wine +
+          " Bottles of White Wine</p><p>" +
+          rose_wine +
+          " Bottles of Rose</p>";
+
+        if (selected == 2) {
+          const result = guest * hours * drinkers;
+          let no_of_drinks = result;
+
+          selected = document.getElementById("option").value;
+          document.getElementById("shoppinglist2_div").innerHTML =
+            `<h4>Liquor<span  style="font-size:20px;"> (` +
+            result3 +
+            ` Servings / 750ml Bottle) </span></h4> ` +
+            `${Math.ceil(result3 / 16)} Liquor Bottles`;
+          result3 = (range3 / 100) * no_of_drinks;
+        } else if (selected == 1) {
+          const result = guest * hours * drinkers;
+          let no_of_drinks = result;
+
+          selected = document.getElementById("option").value;
+          document.getElementById("shoppinglist2_div").innerHTML = "";
+
+          result3 = (range3 / 100) * no_of_drinks;
+        }
+      }
+
+      function error(msg) {
+        const snackbar = document.getElementById("snackbar");
+        snackbar.className = "show";
+        snackbar.innerHTML = msg;
+        setTimeout(function () {
+          snackbar.className = snackbar.className.replace("show", "");
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>
